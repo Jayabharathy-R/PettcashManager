@@ -35,7 +35,7 @@ function Register() {
             navigate('/');
             alert("Registered succussfully!!! Login to continue..");
         }
-    },[userAuth]);
+    },[userAuth,navigate]);
     return (
         <div  >
              <div className="row align-items-center" id="grid-col-1">

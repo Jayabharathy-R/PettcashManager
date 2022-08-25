@@ -1,6 +1,5 @@
 import { Button } from '@mui/material';
 import React,{useEffect, useState} from 'react';
-import { Link } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -59,7 +58,7 @@ function Profile() {
           }
           getExpense();
         
-        },[]);
+        },[dispatch]);
   
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
