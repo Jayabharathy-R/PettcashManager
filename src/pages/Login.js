@@ -32,7 +32,7 @@ function Login() {
         }
       
         
-    }, [userAuth]);
+    }, [userAuth,navigate]);
 
     return (
         <div>
