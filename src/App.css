@@ -1,0 +1,34 @@
+#grid-col-1{
+  background-image: url("https://www.freshbooks.com/wp-content/uploads/calculate-depreciation.jpg.optimal.jpg");
+  background-size: cover;
+  height:93vh;
+  width: 100%;
+  margin:0px ;
+}
+#title{
+  text-align: center;
+  color:red;
+  font-family: serif;
+ 
+}
+h1 span{
+  font-size: 0.75em;
+  color: blue;
+
+}
+#entrybtn{
+  display: flex;
+  padding-top: 20px;
+  width: 60%;
+  justify-content: space-around;
+ margin: auto;
+} 
+@media (max-width: 840px) {
+  #entrybtn{
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 200px;
+    width: 100%;
+  }
+}
