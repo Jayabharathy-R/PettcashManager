@@ -1,2 +1,2 @@
-const baseUrl="http://localhost:3002/pettycashManager";
+const baseUrl="https://pettycash-manager.herokuapp.com/pettycashManager";
 export default baseUrl;
