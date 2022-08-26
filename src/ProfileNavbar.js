@@ -12,14 +12,10 @@ const ProfileNavbar = () => {
          
     
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <Link to="/profile" className="nav-link active me-2">
-                 Profile
-                </Link>
-              </li>
+              
 
               <li class="nav-item mb-2">
-                <Link to="/dashboard" className="btn  btn-outline-warning me-2">
+                <Link to="/profile" className="btn  btn-outline-warning me-2">
                   Dashboard
                 </Link>
               </li>
