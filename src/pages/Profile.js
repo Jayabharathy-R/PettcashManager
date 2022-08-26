@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import React,{useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -8,12 +7,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { userExpenseAction } from '../redux/slices/expenseSlice';
-import { useDispatch ,useSelector} from 'react-redux';
+// import { userExpenseAction } from '../redux/slices/expenseSlice';
+import { useSelector} from 'react-redux';
+import axios from 'axios';
+import baseUrl from '../utilities/baseUrl';
+import EntryButton from './EntryButton';
+
+
 
 
 const columns = [
-    { id: 'title', label: 'Title', minWidth: 170 },
+    { id: 'title', label: 'Title', minWidth: 150 },
     {
         id: 'amount',
         label: 'Amount',
@@ -43,22 +47,52 @@ const columns = [
  
 
 function Profile() {
-    const dispatch=useDispatch();
+    // const dispatch=useDispatch();
+    const [totalBal,setTotalBal]=useState(0);
     const [rows,setRows]=useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const userExpense=useSelector((state)=>state?.expense.userExpense);
-   console.log(userExpense);
-    setRows(userExpense);
+    const userToken=useSelector((state)=>state?.user?.userAuth?.token);
+    // const expense=useSelector((state)=>state?.expense);
+    // const {  userExpense } = expense;
+    console.log(rows);
+    
+    //  const totalBalance=rows.reduce((acc,row)=>{
+    // return (row.type=='Cash In')? acc+row.amount: acc-row.amount;
+    //  },0);
+    //  console.log(totalBalance);
+     useEffect(()=>{
+      const totalBalance=rows.reduce((acc,row)=>{
+        return (row.type==='Cash In')? acc+row.amount: acc-row.amount;
+         },0);
+      setTotalBal(totalBalance);
+     },[rows]);
+    
+
+    useEffect(()=>{
+      const config={
+        headers:{
+            Authorization: `Bearer ${userToken}`,
+        }
+    }
+      const getExpense=async()=>{
+       const {data}= await axios.get(`${baseUrl}/expense/userExpense`, config);
+      
+      setRows(data);
+      }
+            getExpense();
+            
+    },[userToken])
+    // setRows(userExpense);
 
 
-      useEffect(()=>{
-          const getExpense=()=>{
-          dispatch(userExpenseAction());
-          }
-          getExpense();
+    //   useEffect(()=>{
+    //       const getExpense=()=>{
+    //       dispatch(userExpenseAction());
+    //       }
+    //       getExpense();
         
-        },[dispatch]);
+    //     },[dispatch]);
   
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -73,19 +107,9 @@ function Profile() {
     return ( 
         <div>
             
-           <div id="entrybtn">
-        <select name="type">
-            <option>Search by catagory</option>
-            <option value="expense">Expense</option>
-            <option value="cashIn">Cash in</option>
-            <option value="cashOut">Cash out</option>
-        </select>
-        <div><Button variant="contained" >Add Expense</Button></div>
-        <div><Button variant="contained" >Cash In</Button></div>
-        <div><Button variant="contained">Cash Out</Button></div>
-      </div>
-
-      <Paper sx={{ width: '90%', overflow: 'hidden',margin:'50px auto' }}>
+      
+        <EntryButton totalBal={totalBal}/>
+      <Paper sx={{ width: '90%', overflow: 'hidden',margin:'auto',marginTop:'50px' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
