@@ -8,7 +8,6 @@ export const userExpenseAction=createAsyncThunk(
         const userToken = getState()?.user?.userAuth?.token;
         const config={
             headers:{
-                'content-Type':'application/json',
                 Authorization: `Bearer ${userToken}`,
             }
         }
@@ -25,12 +24,35 @@ export const userExpenseAction=createAsyncThunk(
     }
 );
 
+//createExpense
+export const userExpenseCreateAction=createAsyncThunk(
+    "expense/createExpense",
+    async(payload,{rejectWithValue,getState,dispatch})=>{
+        const userToken = getState()?.user?.userAuth?.token;
+        const config={
+            headers:{
+                Authorization: `Bearer ${userToken}`,
+            }
+        }
+        try {
+            const {data}=await axios.post(`${baseUrl}/expense`,
+            payload,
+            config);
+            return data;
+        } catch (error) {
+            if(!error?.response){
+                throw error;
+            }
+            return rejectWithValue(error?.response?.data) ;
+        }
+    }
+);
+
 const expenseSlice=createSlice({
     name:"expense",
-    initialState:{
-    
-     },
+    initialState:{},
     extraReducers: builder=>{
+        //fetchExpense
       
         builder.addCase(userExpenseAction.pending,(state,action)=>{
             state.userLoading=true;
@@ -44,6 +66,24 @@ const expenseSlice=createSlice({
             state.userServerErr=undefined;
         });
         builder.addCase(userExpenseAction.rejected,(state,action)=>{
+            state.userLoading=false;
+            state.userAppErr=action?.payload?.msg;
+            state.userServerErr=action?.error?.msg;
+        });
+
+        //createExpense 
+        builder.addCase(userExpenseCreateAction.pending,(state,action)=>{
+            state.userLoading=true;
+            state.userAppErr=undefined;
+            state.userServerErr=undefined;
+        });
+        builder.addCase(userExpenseCreateAction.fulfilled,(state,action)=>{
+            state.newExpense=action?.payload ;      
+            state.userLoading=false;
+            state.userAppErr=undefined;
+            state.userServerErr=undefined;
+        });
+        builder.addCase(userExpenseCreateAction.rejected,(state,action)=>{
             state.userLoading=false;
             state.userAppErr=action?.payload?.msg;
             state.userServerErr=action?.error?.msg;
