@@ -53,15 +53,19 @@ function Profile() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const userToken=useSelector((state)=>state?.user?.userAuth?.token);
-    const newExpense=useSelector((state)=>state?.expense?.newExpense);
-     useEffect(()=>{
-     
-        const totalBalance=rows.reduce((acc,row)=>{
-          return (row.type==='Cash In')? acc+row.amount: acc-row.amount;
-           },0);
-        setTotalBal(totalBalance);
-       
+    // const expense=useSelector((state)=>state?.expense);
+    // const {  userExpense } = expense;
+    console.log(rows);
     
+    //  const totalBalance=rows.reduce((acc,row)=>{
+    // return (row.type=='Cash In')? acc+row.amount: acc-row.amount;
+    //  },0);
+    //  console.log(totalBalance);
+     useEffect(()=>{
+      const totalBalance=rows.reduce((acc,row)=>{
+        return (row.type==='Cash In')? acc+row.amount: acc-row.amount;
+         },0);
+      setTotalBal(totalBalance);
      },[rows]);
     
 
@@ -77,16 +81,18 @@ function Profile() {
       setRows(data);
       }
             getExpense();
-  
             
-    },[userToken]);
- 
+    },[userToken])
+    // setRows(userExpense);
 
-    useEffect(()=>{
-      setRows([...rows,newExpense]);
-       // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[newExpense]);
 
+    //   useEffect(()=>{
+    //       const getExpense=()=>{
+    //       dispatch(userExpenseAction());
+    //       }
+    //       getExpense();
+        
+    //     },[dispatch]);
   
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
