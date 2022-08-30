@@ -53,10 +53,10 @@ function Profile() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const userToken=useSelector((state)=>state?.user?.userAuth?.token);
+    const newExpense=useSelector((state)=>state?.expense?.newExpense);
+ 
     // const expense=useSelector((state)=>state?.expense);
-    // const {  userExpense } = expense;
-    console.log(rows);
-    
+    // const {  userExpense } = expense;    
     //  const totalBalance=rows.reduce((acc,row)=>{
     // return (row.type=='Cash In')? acc+row.amount: acc-row.amount;
     //  },0);
@@ -81,8 +81,15 @@ function Profile() {
       setRows(data);
       }
             getExpense();
+            if(newExpense){
+              setRows([...rows,newExpense]);
+            }
             
-    },[userToken])
+    },[userToken,newExpense]);
+
+    // useEffect(()=>{
+    //   setRows([...rows,newExpense]);
+    // },[newExpense]);
     // setRows(userExpense);
 
 

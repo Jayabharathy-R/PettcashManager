@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
-import baseUrl from '../utilities/baseUrl';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { userExpenseCreateAction } from '../redux/slices/expenseSlice';
+
 
 const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
@@ -14,21 +14,15 @@ const validationSchema = Yup.object({
 });
 
 function EntryButton({totalBal}) {
+    const dispatch=useDispatch();
    useEffect(()=>{
     setCurBal(totalBal);
    },[totalBal]);
 
-    const openBal=`${totalBal}`;
     const [curBal,setCurBal]=useState(0);
     const [totalExpense,setTotalExpense]=useState(0);
-    const userToken=useSelector((state)=>state?.user?.userAuth?.token);
-    const config={
-        headers:{
-            Authorization: `Bearer ${userToken}`,
-        }
-    }
-
-    const formik = useFormik({
+    
+      const formik = useFormik({
         initialValues: {
             type: "",
             title: "",
@@ -38,8 +32,8 @@ function EntryButton({totalBal}) {
         validationSchema: validationSchema,
         onSubmit:async (values) => {
            
-            await axios.post(`${baseUrl}/expense`, values,config);
-           console.log(values.type);
+            dispatch(userExpenseCreateAction(values));
+         
             if(values.type==='Cash In'){
                 setCurBal(curBal+Number(values.amount));
                 
@@ -79,9 +73,9 @@ function EntryButton({totalBal}) {
     return (
         <div>
             <div id="entrybtn">
-               <div>Opening Balance={openBal}<br/>
-               Current Balance={curBal}<br/>
-               Total Expense={totalExpense}<br/>
+               <div>
+               <b className='text-success'>Current Balance={curBal}</b>
+              
                </div>
                 <div><Button variant="contained" onClick={handleClickOpen}>Add Expense</Button>
                     <Dialog open={open}>
